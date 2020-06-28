@@ -28,13 +28,20 @@ func main() {
 	defer client.Disconnect(ctx)
 	testDatabase := client.Database("test")
 	userCollection := testDatabase.Collection("users")
-	userResult, err := userCollection.InsertOne(ctx, bson.D{
-		{Key: "name", Value: "Json Liang"},
-		{Key: "age", Value: 18},
-		{Key: "skills", Value: bson.A{"programing", "swim", "chess"}},
+	userResult, err := userCollection.InsertMany(ctx, []interface{}{
+		bson.D{
+			{Key: "name", Value: "Json Liang"},
+			{Key: "age", Value: 18},
+			{Key: "skills", Value: bson.A{"programing", "swim", "chess"}},
+		},
+		bson.D{
+			{Key: "name", Value: "nick Liang"},
+			{Key: "age", Value: 28},
+			{Key: "skills", Value: bson.A{"programing", "swim", "chess", "mountain climbing"}},
+		},
 	})
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("InsertResult", userResult.InsertedID)
+	fmt.Println("InsertResult", userResult.InsertedIDs)
 }
