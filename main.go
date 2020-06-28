@@ -10,7 +10,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 func main() {
@@ -27,13 +26,15 @@ func main() {
 		log.Fatal(err)
 	}
 	defer client.Disconnect(ctx)
-	err = client.Ping(ctx, readpref.Primary())
+	testDatabase := client.Database("test")
+	userCollection := testDatabase.Collection("users")
+	userResult, err := userCollection.InsertOne(ctx, bson.D{
+		{Key: "name", Value: "Json Liang"},
+		{Key: "age", Value: 18},
+		{Key: "skills", Value: bson.A{"programing", "swim", "chess"}},
+	})
 	if err != nil {
 		log.Fatal(err)
 	}
-	database, err := client.ListDatabaseNames(ctx, bson.M{})
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(database)
+	fmt.Println("InsertResult", userResult.InsertedID)
 }
