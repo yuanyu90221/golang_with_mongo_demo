@@ -32,14 +32,33 @@ func main() {
 	fmt.Println("Connected To MognoDB with ", connectString)
 	cats := client.Database("test").Collection("cats")
 	filter := bson.M{}
-	var result Cat
-	err = cats.FindOne(context.TODO(), filter).Decode(&result)
-	if err != nil {
-		log.Fatal(err)
+	// var result Cat
+	var resultList []Cat
+	// err = cats.FindOne(context.TODO(), filter).Decode(&result)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	cur, errAll := cats.Find(context.Background(), filter)
+	if errAll != nil {
+		log.Fatal(errAll)
 	}
+	for cur.Next(context.Background()) {
+		var cat Cat
+		errTemp := cur.Decode(&cat)
+		if errTemp != nil {
+			log.Fatal(errTemp)
+		}
+		resultList = append(resultList, cat)
+	}
+	deleteResult, err1 := cats.DeleteMany(context.TODO(), filter)
+	if err1 != nil {
+		log.Fatal(err1)
+	}
+	log.Println(*&deleteResult.DeletedCount)
 	err = client.Disconnect(context.Background())
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("found single document Name: ", result.Name, ",Age:", result.Age)
+	// fmt.Println("found single document Name: ", result.Name, ",Age:", result.Age)
+	fmt.Println(resultList)
 }
