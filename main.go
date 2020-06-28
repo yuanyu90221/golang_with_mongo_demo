@@ -50,11 +50,13 @@ func main() {
 		}
 		resultList = append(resultList, cat)
 	}
-	deleteResult, err1 := cats.DeleteMany(context.TODO(), filter)
-	if err1 != nil {
-		log.Fatal(err1)
+	if len(resultList) > 0 {
+		deleteResult, err1 := cats.DeleteMany(context.TODO(), filter)
+		if err1 != nil {
+			log.Fatal(err1)
+		}
+		log.Println(*&deleteResult.DeletedCount)
 	}
-	log.Println(*&deleteResult.DeletedCount)
 	err = client.Disconnect(context.Background())
 	if err != nil {
 		log.Fatal(err)
