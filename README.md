@@ -1,6 +1,6 @@
 # golang_with_mongodb
 
-[golang with docker](https://www.mongodb.com/blog/post/quick-start-golang--mongodb--how-to-create-documents)
+[golang with mongo](https://www.mongodb.com/blog/post/quick-start-golang--mongodb--how-to-create-documents)
 
 ## introduction
 
